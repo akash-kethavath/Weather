@@ -2,8 +2,8 @@
 const API_KEY = '8a4dd1d64843e20f7390e25ad8fa2d51';
 
 // DOM elements
+const searchForm = document.getElementById('search-form');
 const cityInput = document.getElementById('city-input');
-const searchBtn = document.getElementById('search-btn');
 const cityElement = document.getElementById('city');
 const descriptionElement = document.getElementById('description');
 const temperatureElement = document.getElementById('temperature');
@@ -12,11 +12,9 @@ const humidityElement = document.getElementById('humidity');
 const airQualityElement = document.getElementById('air-quality');
 
 // Event listeners
-searchBtn.addEventListener('click', getWeather);
-cityInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        getWeather();
-    }
+searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    getWeather();
 });
 
 // Function to fetch weather data
@@ -44,12 +42,12 @@ async function getWeather() {
 function updateWeatherInfo(data) {
     cityElement.textContent = `${data.name}, ${data.sys.country}`;
     descriptionElement.textContent = data.weather[0].description;
-    temperatureElement.textContent = `Temperature: ${Math.round(data.main.temp)}°C`;
-    windElement.textContent = `Wind Speed: ${data.wind.speed} m/s`;
-    humidityElement.textContent = `Humidity: ${data.main.humidity}%`;
+    temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
+    windElement.textContent = `${data.wind.speed} m/s`;
+    humidityElement.textContent = `${data.main.humidity}%`;
     
     // Placeholder for air quality (you can integrate with another API if needed)
-    airQualityElement.textContent = 'Air Quality: Data not available';
+    airQualityElement.textContent = 'Data not available';
 }
 
 // Initial weather data
