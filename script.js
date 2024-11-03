@@ -1,6 +1,5 @@
 // OpenWeatherMap API key
-const API_KEY = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=b3b8f9a151d976e14c12f0114f00f00f
-';
+const API_KEY = 'b3b8f9a151d976e14c12f0114f00f00f';
 
 // DOM elements
 const cityInput = document.getElementById('city-input');
