@@ -1,55 +1,57 @@
-let weather = {
-    fetchWeather: function (city) {
-        // First, we need to convert the city name to latitude and longitude using a geocoding service
-        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
-        .then((response) => response.json())
-        .then((geoData) => {
-            if (geoData.results && geoData.results.length > 0) {
-                const { latitude, longitude, name, country } = geoData.results[0];
-                this.getWeatherData(latitude, longitude, name, country);
-            } else {
-                console.error("City not found");
-            }
-        })
-        .catch((error) => console.error("Error fetching geolocation data:", error));
-    },
+// OpenWeatherMap API key
+const API_KEY = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=b3b8f9a151d976e14c12f0114f00f00f
+';
 
-    getWeatherData: function (latitude, longitude, cityName, country) {
-        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=celsius&windspeed_unit=kmh`)
-        .then((response) => response.json())
-        .then((data) => this.displayWeather(data, cityName, country))
-        .catch((error) => console.error("Error fetching weather data:", error));
-    },
+// DOM elements
+const cityInput = document.getElementById('city-input');
+const searchBtn = document.getElementById('search-btn');
+const cityElement = document.getElementById('city');
+const descriptionElement = document.getElementById('description');
+const temperatureElement = document.getElementById('temperature');
+const windElement = document.getElementById('wind');
+const humidityElement = document.getElementById('humidity');
+const airQualityElement = document.getElementById('air-quality');
 
-    displayWeather: function (data, cityName, country) {
-        const { temperature, windspeed } = data.current_weather;
-
-        // Since Open-Meteo API doesn't provide icons or descriptions, you can use a default description
-        document.querySelector(".city").innerText = `Weather in ${cityName}, ${country}`;
-        document.querySelector(".icon").src = "https://www.example.com/default-icon.png"; // You can choose a default weather icon here
-        document.querySelector(".description").innerText = "Current weather";
-        document.querySelector(".temp").innerText = temperature + "°C";
-        document.querySelector(".humidity").innerText = ""; // Open-Meteo doesn't provide humidity
-        document.querySelector(".wind").innerText = "Wind speed: " + windspeed + " km/h";
-        document.querySelector(".weather").classList.remove("loading");
-        document.body.style.backgroundImage = `url('https://source.unsplash.com/1600x900/?${cityName}')`;
-    },
-
-    search: function () {
-        this.fetchWeather(document.querySelector(".searchbar").value);
-    }
-};
-
-document.querySelector(".search button").addEventListener("click", function () {
-    weather.search();
-});
-
-document.querySelector(".searchbar").addEventListener("keyup", function (event) {
-    if (event.key == "Enter") {
-        weather.search();
+// Event listeners
+searchBtn.addEventListener('click', getWeather);
+cityInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        getWeather();
     }
 });
 
-// Default city weather when the page loads
-weather.fetchWeather("Durgapur");
+// Function to fetch weather data
+async function getWeather() {
+    const city = cityInput.value.trim();
+    if (!city) return;
 
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`);
+        const data = await response.json();
+
+        if (data.cod === '404') {
+            alert('City not found. Please try again.');
+            return;
+        }
+
+        updateWeatherInfo(data);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        alert('An error occurred while fetching weather data. Please try again.');
+    }
+}
+
+// Function to update weather information
+function updateWeatherInfo(data) {
+    cityElement.textContent = `${data.name}, ${data.sys.country}`;
+    descriptionElement.textContent = data.weather[0].description;
+    temperatureElement.textContent = `Temperature: ${Math.round(data.main.temp)}°C`;
+    windElement.textContent = `Wind Speed: ${data.wind.speed} m/s`;
+    humidityElement.textContent = `Humidity: ${data.main.humidity}%`;
+    
+    // Placeholder for air quality (you can integrate with another API if needed)
+    airQualityElement.textContent = 'Air Quality: Data not available';
+}
+
+// Initial weather data (optional)
+getWeather('London'); // You can set a default city here
