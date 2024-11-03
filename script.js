@@ -52,5 +52,5 @@ function updateWeatherInfo(data) {
     airQualityElement.textContent = 'Air Quality: Data not available';
 }
 
-// Initial weather data (optional)
-getWeather('London'); // You can set a default city here
+// Initial weather data
+getWeather('Hyderabad');
