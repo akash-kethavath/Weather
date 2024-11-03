@@ -1,3 +1,6 @@
+
+const API_KEY = '8a4dd1d64843e20f7390e25ad8fa2d51';
+
 // DOM elements
 const searchForm = document.getElementById('search-form');
 const cityInput = document.getElementById('city-input');
@@ -20,8 +23,7 @@ async function getWeather() {
     if (!city) return;
 
     try {
-        // Use a proxy server to make the API request
-        const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`);
         const data = await response.json();
 
         if (data.cod === '404') {
