@@ -1,5 +1,5 @@
 const WEATHER_API_KEY = '8a4dd1d64843e20f7390e25ad8fa2d51';
-const AQI_API_KEY = 'd405fc489385c704e7f5f46bf5693f1f';
+const AQI_API_KEY = '8a4dd1d64843e20f7390e25ad8fa2d51';
 
 // DOM elements
 const searchForm = document.getElementById('search-form');
